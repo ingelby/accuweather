@@ -1,1 +1,1 @@
-# accuweather
+# Yii2 AccuWeather Wrapper

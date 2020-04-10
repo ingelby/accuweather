@@ -1,0 +1,30 @@
+{
+  "name": "ingelby/accuweather",
+  "description": "Yii2 Accuweather Wrapper",
+  "type": "library",
+  "license": "Proprietary",
+  "authors": [
+    {
+      "name": "George Hallam",
+      "email": "george.hallam@ingelby.com.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Ingelby\\Accuweather\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=7.3.0",
+    "ingelby/toolbox": "dev-master",
+    "nesbot/carbon": "2.*"
+  },
+  "require-dev": {
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:ingelby/toolbox.git"
+    }
+  ]
+}
