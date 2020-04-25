@@ -18,4 +18,12 @@ class Constants
         return round(($imperial - 32) / 1.8, 1);
     }
 
+    /**
+     * @param float $metric
+     * @return float
+     */
+    public static function convertToImperial($metric): float
+    {
+        return round(($metric * (9/5)) + 32, 1);
+    }
 }
