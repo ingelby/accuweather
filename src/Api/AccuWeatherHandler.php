@@ -58,7 +58,7 @@ class AccuWeatherHandler extends InguzzleHandler
                     'q'        => $locationQuery,
                     'language' => 'en-gb',
                 ],
-                );
+            );
 
             foreach ($response as $city) {
                 $autoCompleteCities[] = new AutoCompleteCity(
@@ -100,7 +100,52 @@ class AccuWeatherHandler extends InguzzleHandler
                             'apikey'   => $this->apiKey,
                             'language' => 'en-gb',
                         ],
-                        );
+                    );
+
+                    return new Location(
+                        [
+                            'key'           => $response['Key'] ?? 1,
+                            'type'          => $response['Type'] ?? 'Unknown',
+                            'rank'          => $response['Rank'] ?? 10,
+                            'localisedName' => $response['LocalizedName'] ?? 'Unknown',
+                            'country'       => $response['Country']['LocalizedName'] ?? 'Unknown',
+                            'countryCode'   => $response['Country']['ID'] ?? 'Unknown',
+                        ]
+                    );
+
+                } catch (InguzzleClientException | InguzzleInternalServerException | InguzzleServerException $e) {
+                    LoggingHelper::logException($e);
+                    throw new AccuWeatherApiException(HttpStatus::BAD_REQUEST, 'Error calling acuweather', 0, $e);
+                }
+            },
+            static::DEFAULT_CACHE_DURATION
+        );
+    }
+
+
+    /**
+     * @param string $locationKey
+     * @return Location
+     * @throws AccuWeatherApiException
+     */
+    public function getGeoposition(float $latitude, float $longitude): Location
+    {
+
+        $cacheKey = static::CACHE_KEY . __FUNCTION__ . $latitude . $longitude;
+
+        return \Yii::$app->cache->getOrSet(
+            $cacheKey,
+            function () use ($latitude, $longitude, $cacheKey) {
+                \Yii::info('Caching key: ' . $cacheKey);
+                try {
+                    $response = $this->get(
+                        '/locations/v1/cities/geoposition/search',
+                        [
+                            'apikey'   => $this->apiKey,
+                            'q'        => $latitude . ',' . $longitude,
+                            'language' => 'en-gb',
+                        ],
+                    );
 
                     return new Location(
                         [
@@ -144,7 +189,7 @@ class AccuWeatherHandler extends InguzzleHandler
                             'language' => 'en-gb',
                             'details'  => 'true',
                         ],
-                        );
+                    );
 
 
                     return new CurrentConditions(
@@ -199,7 +244,7 @@ class AccuWeatherHandler extends InguzzleHandler
                             'language' => 'en-gb',
                             'details'  => 'true',
                         ],
-                        );
+                    );
 
                     foreach ($response['DailyForecasts'] as $dailyForecast) {
                         $forecast[] = new DailyForecast(
@@ -249,7 +294,7 @@ class AccuWeatherHandler extends InguzzleHandler
                             'apikey'   => $this->apiKey,
                             'language' => 'en-gb',
                         ],
-                        );
+                    );
 
                     foreach ($response as $hourlyForecast) {
                         $forecast[] = new HourlyForecast(
