@@ -63,11 +63,13 @@ class AccuWeatherHandler extends InguzzleHandler
             foreach ($response as $city) {
                 $autoCompleteCities[] = new AutoCompleteCity(
                     [
-                        'key'           => $city['Key'] ?? 1,
-                        'rank'          => $city['Rank'] ?? 10,
-                        'localisedName' => $city['LocalizedName'] ?? 'Unknown',
-                        'country'       => $city['Country']['LocalizedName'] ?? 'Unknown',
-                        'countryCode'   => $city['Country']['ID'] ?? 'Unknown',
+                        'key'                    => $city['Key'] ?? 1,
+                        'rank'                   => $city['Rank'] ?? 10,
+                        'localisedName'          => $city['LocalizedName'] ?? 'Unknown',
+                        'countryName'            => $city['Country']['LocalizedName'] ?? 'Unknown',
+                        'countryId'              => $city['Country']['ID'] ?? 'Unknown',
+                        'administrativeAreaName' => $city['AdministrativeArea']['LocalizedName'] ?? 'Unknown',
+                        'administrativeAreaId'   => $city['AdministrativeArea']['ID'] ?? 'Unknown',
                     ]
                 );
             }
@@ -104,12 +106,14 @@ class AccuWeatherHandler extends InguzzleHandler
 
                     return new Location(
                         [
-                            'key'           => $response['Key'] ?? 1,
-                            'type'          => $response['Type'] ?? 'Unknown',
-                            'rank'          => $response['Rank'] ?? 10,
-                            'localisedName' => $response['LocalizedName'] ?? 'Unknown',
-                            'country'       => $response['Country']['LocalizedName'] ?? 'Unknown',
-                            'countryCode'   => $response['Country']['ID'] ?? 'Unknown',
+                            'key'                    => $response['Key'] ?? 1,
+                            'type'                   => $response['Type'] ?? 'Unknown',
+                            'rank'                   => $response['Rank'] ?? 10,
+                            'localisedName'          => $response['LocalizedName'] ?? 'Unknown',
+                            'countryName'            => $response['Country']['LocalizedName'] ?? 'Unknown',
+                            'countryId'              => $response['Country']['ID'] ?? 'Unknown',
+                            'administrativeAreaName' => $response['AdministrativeArea']['LocalizedName'] ?? 'Unknown',
+                            'administrativeAreaId'   => $response['AdministrativeArea']['ID'] ?? 'Unknown',
                         ]
                     );
 
@@ -149,12 +153,14 @@ class AccuWeatherHandler extends InguzzleHandler
 
                     return new Location(
                         [
-                            'key'           => $response['Key'] ?? 1,
-                            'type'          => $response['Type'] ?? 'Unknown',
-                            'rank'          => $response['Rank'] ?? 10,
-                            'localisedName' => $response['LocalizedName'] ?? 'Unknown',
-                            'country'       => $response['Country']['LocalizedName'] ?? 'Unknown',
-                            'countryCode'   => $response['Country']['ID'] ?? 'Unknown',
+                            'key'                    => $response['Key'] ?? 1,
+                            'type'                   => $response['Type'] ?? 'Unknown',
+                            'rank'                   => $response['Rank'] ?? 10,
+                            'localisedName'          => $response['LocalizedName'] ?? 'Unknown',
+                            'countryName'            => $response['Country']['LocalizedName'] ?? 'Unknown',
+                            'countryId'              => $response['Country']['ID'] ?? 'Unknown',
+                            'administrativeAreaName' => $response['AdministrativeArea']['LocalizedName'] ?? 'Unknown',
+                            'administrativeAreaId'   => $response['AdministrativeArea']['ID'] ?? 'Unknown',
                         ]
                     );
 

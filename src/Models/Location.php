@@ -9,8 +9,10 @@ class Location extends Model
     public $key;
     public $rank;
     public $localisedName;
-    public $country;
-    public $countryCode;
+    public $countryName;
+    public $countryId;
+    public $administrativeAreaId;
+    public $administrativeAreaName;
     public $type;
 
     public function rules()
@@ -22,8 +24,10 @@ class Location extends Model
                     'key',
                     'rank',
                     'localisedName',
-                    'country',
-                    'countryCode',
+                    'countryName',
+                    'countryId',
+                    'administrativeAreaName',
+                    'administrativeAreaId',
                 ],
                 'safe',
             ],
@@ -35,6 +39,6 @@ class Location extends Model
      */
     public function getFullFriendlyName()
     {
-        return $this->localisedName . ' ' . $this->country . ' (' . $this->countryCode . ')';
+        return $this->localisedName . ', ' . $this->administrativeAreaName . ' (' . $this->countryName . ')';
     }
 }
