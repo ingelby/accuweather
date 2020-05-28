@@ -172,6 +172,51 @@ class AccuWeatherHandler extends InguzzleHandler
             static::DEFAULT_CACHE_DURATION
         );
     }
+    /**
+     * @param string $locationKey
+     * @return Location
+     * @throws AccuWeatherApiException
+     */
+    public function getIpAddress(string $ipAddress): Location
+    {
+
+        $cacheKey = static::CACHE_KEY . __FUNCTION__ . $ipAddress;
+
+        return \Yii::$app->cache->getOrSet(
+            $cacheKey,
+            function () use ($ipAddress, $cacheKey) {
+                \Yii::info('Caching key: ' . $cacheKey);
+                try {
+                    $response = $this->get(
+                        '/locations/v1/cities/ipaddress',
+                        [
+                            'apikey'   => $this->apiKey,
+                            'q'        => $ipAddress,
+                            'language' => 'en-gb',
+                        ],
+                    );
+
+                    return new Location(
+                        [
+                            'key'                    => $response['Key'] ?? 1,
+                            'type'                   => $response['Type'] ?? 'Unknown',
+                            'rank'                   => $response['Rank'] ?? 10,
+                            'localisedName'          => $response['LocalizedName'] ?? 'Unknown',
+                            'countryName'            => $response['Country']['LocalizedName'] ?? 'Unknown',
+                            'countryId'              => $response['Country']['ID'] ?? 'Unknown',
+                            'administrativeAreaName' => $response['AdministrativeArea']['LocalizedName'] ?? 'Unknown',
+                            'administrativeAreaId'   => $response['AdministrativeArea']['ID'] ?? 'Unknown',
+                        ]
+                    );
+
+                } catch (InguzzleClientException | InguzzleInternalServerException | InguzzleServerException $e) {
+                    LoggingHelper::logException($e);
+                    throw new AccuWeatherApiException(HttpStatus::BAD_REQUEST, 'Error calling acuweather', 0, $e);
+                }
+            },
+            static::DEFAULT_CACHE_DURATION
+        );
+    }
 
     /**
      * @param string $locationKey
