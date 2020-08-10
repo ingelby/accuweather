@@ -80,6 +80,44 @@ class AccuWeatherHandler extends InguzzleHandler
         return $autoCompleteCities;
     }
 
+    /**
+     * @param string $locationQuery
+     * @return Location[]
+     */
+    public function getLocationsSearch(string $locationQuery): array
+    {
+        $locations = [];
+
+        try {
+            $response = $this->get(
+                '/locations/v1/search',
+                [
+                    'apikey'   => $this->apiKey,
+                    'q'        => $locationQuery,
+                    'language' => 'en-gb',
+                ],
+            );
+
+            foreach ($response as $location) {
+                $locations[] = new Location(
+                    [
+                        'key'                    => $location['Key'] ?? 1,
+                        'rank'                   => $location['Rank'] ?? 10,
+                        'localisedName'          => $location['LocalizedName'] ?? 'Unknown',
+                        'countryName'            => $location['Country']['LocalizedName'] ?? 'Unknown',
+                        'countryId'              => $location['Country']['ID'] ?? 'Unknown',
+                        'administrativeAreaName' => $location['AdministrativeArea']['LocalizedName'] ?? 'Unknown',
+                        'administrativeAreaId'   => $location['AdministrativeArea']['ID'] ?? 'Unknown',
+                    ]
+                );
+            }
+        } catch (InguzzleClientException | InguzzleInternalServerException | InguzzleServerException $e) {
+            LoggingHelper::logException($e);
+        }
+
+        return $locations;
+    }
+
 
     /**
      * @param string $locationKey
@@ -125,7 +163,6 @@ class AccuWeatherHandler extends InguzzleHandler
             static::DEFAULT_CACHE_DURATION
         );
     }
-
 
     /**
      * @param string $locationKey
